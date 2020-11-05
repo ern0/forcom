@@ -8,13 +8,15 @@ except: quit("FATAL: install module ply")
 tokens = (
 	"ATOM_T", "ATOM_N",
 	"ATOM_N_DEC", "ATOM_N_HEX_C", "ATOM_N_HEX_I", "ATOM_N_HEX_M",
+	"ATOM_QUOTED",
 	"ATOM_QUOTED_SINGLE", "ATOM_QUOTED_DOUBLE",
 	"OP_PLUS", "OP_MINUS", "OP_MUL", "OP_DIV", "OP_MOD",
 	"OP_SHL", "OP_SHR",
 	"OP_OR", "OP_AND", "OP_XOR", "OP_NOT",
 	"OP_EQ", "OP_NE_1", "OP_NE_2", "OP_LT", "OP_LE", "OP_GT", "OP_GE",
 	"BRACE_ROUND_OPEN", "BRACE_ROUND_CLOSE",
-	"BRACE_SQUARE_OPEN", "BRACE_SQUARE_CLOSE"
+	"BRACE_SQUARE_OPEN", "BRACE_SQUARE_CLOSE",
+	"SEP_QUESTION", "SEP_COLON", "SEP_COMMA"
 )
 
 t_ignore_SPACE = r"\ "
@@ -23,8 +25,6 @@ t_ignore_CR = r"\r"
 t_ignore_LF = r"\n"
 
 t_ATOM_T = r"t"
-t_ATOM_QUOTED_SINGLE = r"'(.*?)'"
-t_ATOM_QUOTED_DOUBLE = r'"(.*?)"'
 t_OP_PLUS = r"\+"
 t_OP_MINUS = r"\-"
 t_OP_MUL = r"\*"
@@ -43,8 +43,36 @@ t_OP_LT = r"\<"
 t_OP_LE = r"\<\="
 t_OP_GT = r"\>"
 t_OP_GE = r"\>\="
+t_BRACE_ROUND_OPEN = r"\("
+t_BRACE_ROUND_CLOSE = r"\)"
+t_BRACE_SQUARE_OPEN = r"\["
+t_BRACE_SQUARE_CLOSE = r"\]"
+t_SEP_QUESTION = r"\?"
+t_SEP_COLON = r"\:"
+t_SEP_COMMA = r"\,"
 
 def t_error(token): pass
+
+
+def t_ATOM_QUOTED(token):
+	r"nope^" 
+
+
+def t_ATOM_QUOTED_SINGLE(token):
+	r"'(.*?)'"
+	
+	token.type = "ATOM_QUOTED"
+	token.value = token.value[1:-1]
+	return token
+
+
+def t_ATOM_QUOTED_DOUBLE(token):
+	r'"(.*?)"'
+
+	token.type = "ATOM_QUOTED"
+	token.value = token.value[1:-1]
+	return token
+
 
 def t_ATOM_N(token):
 	r"nope^" 
@@ -76,10 +104,13 @@ def t_ATOM_N_HEX_M(token):
 
 def t_ATOM_N_DEC(token):
 	r"\d+"
+	
+	token.type = "ATOM_N"
+	token.value = int(token.value)
 	return token
 		
 
-def performLex(text):
+def proc(text):
 
 	print("LEX: \"" + text + "\"")
 
