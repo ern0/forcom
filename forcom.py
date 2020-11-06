@@ -3,15 +3,16 @@
 import forcom_lex as lex
 import forcom_yacc as yacc
 import logging
+logging.disable(logging.CRITICAL)
+logging.disable(logging.NOTSET)
 
 
 def main():
 
-	logging.disable(logging.CRITICAL)
-	logging.disable(logging.NOTSET)
-
 	if True:
-		yacc.proc(" 1 + 2 + 3 % 4")
+		f = " ( t == 99 ? 1 : 0 )"
+		lex.proc(f)
+		yacc.proc(f)
 
 	if False:
 		lex.proc(" 3-2 ")
