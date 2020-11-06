@@ -6,8 +6,9 @@ except: quit("FATAL: install module ply")
 
 
 tokens = (
-	"ATOM_T", "ATOM_N",
-	"ATOM_N_DEC", "ATOM_N_HEX_C", "ATOM_N_HEX_I", "ATOM_N_HEX_M",
+	"ATOM_TEE", "ATOM_NUM",
+	"ATOM_PL_HEX_C", "ATOM_PL_HEX_I", "ATOM_PL_HEX_M",
+	"ATOM_MI_HEX_C", "ATOM_MI_HEX_I", "ATOM_MI_HEX_M",
 	"ATOM_QUOTED",
 	"ATOM_QUOTED_SINGLE", "ATOM_QUOTED_DOUBLE",
 	"OP_PLUS", "OP_MINUS", "OP_MUL", "OP_DIV", "OP_MOD",
@@ -24,7 +25,7 @@ t_ignore_TAB = r"\t"
 t_ignore_CR = r"\r"
 t_ignore_LF = r"\n"
 
-t_ATOM_T = r"t"
+t_ATOM_TEE = r"t"
 t_OP_PLUS = r"\+"
 t_OP_MINUS = r"\-"
 t_OP_MUL = r"\*"
@@ -74,49 +75,72 @@ def t_ATOM_QUOTED_DOUBLE(token):
 	return token
 
 
-def t_ATOM_N(token):
-	r"nope^" 
-
-
-def t_ATOM_N_HEX_C(token): 
+def t_ATOM_PL_HEX_C(token): 
 	r"0[xX][0-9a-fA-F]+"
 	
-	token.type = "ATOM_N"
+	token.type = "ATOM_NUM"
 	token.value = int( str(token.value), 0)
 	return token
 
 
-def t_ATOM_N_HEX_I(token): 
+def t_ATOM_PL_HEX_I(token): 
 	r"[0-9][0-9a-fA-F]+[hH]"		
 	
-	token.type = "ATOM_N"
+	token.type = "ATOM_NUM"
 	token.value = int( str(token.value[:-1]), 16)
 	return token
 	
 
-def t_ATOM_N_HEX_M(token): 
+def t_ATOM_PL_HEX_M(token): 
 	r"\$[0-9a-fA-F]+"
 	
-	token.type = "ATOM_N"
+	token.type = "ATOM_NUM"
 	token.value = int( str(token.value[1:]), 16)
 	return token
 	
 
-def t_ATOM_N_DEC(token):
-	r"\d+"
+def t_ATOM_MI_HEX_C(token): 
+	r"\-0[xX][0-9a-fA-F]+"
 	
-	token.type = "ATOM_N"
-	token.value = int(token.value)
+	token.type = "ATOM_NUM"
+	token.value = -1 * int( str(token.value[1:]), 0)
 	return token
-		
+
+
+def t_ATOM_MI_HEX_I(token): 
+	r"\-[0-9][0-9a-fA-F]+[hH]"		
+	
+	token.type = "ATOM_NUM"
+	token.value = -1 * int( str(token.value[1:-1]), 16)
+	return token
+	
+
+def t_ATOM_MI_HEX_M(token): 
+	r"\-\$[0-9a-fA-F]+"
+	
+	token.type = "ATOM_NUM"
+	token.value = -1 * int( str(token.value[2:]), 16)
+	return token
+
+
+def t_ATOM_NUM(token):
+	r"[0-9]+[\.]?[0-9]?"
+	return token
+
+
+def build(text):
+	lexer = lex.lex()
+	lex.input(text)
+	
+	return lexer
+	
 
 def proc(text):
 
 	print("LEX: \"" + text + "\"")
 
 	try:
-		lex.lex()
-		lex.input(text)
+		lexer = build(text)
 
 		while True:
 			token = lex.token()
