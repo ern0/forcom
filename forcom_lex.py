@@ -14,7 +14,7 @@ tokens = (
 	"OP_PLUS", "OP_MINUS", "OP_MUL", "OP_DIV", "OP_MOD",
 	"OP_SHL", "OP_SHR",
 	"OP_OR", "OP_AND", "OP_XOR", "OP_NOT",
-	"OP_EQ", "OP_NE_1", "OP_NE_2", "OP_LT", "OP_LE", "OP_GT", "OP_GE",
+	"OP_EQ", "OP_NE", "OP_LT", "OP_LE", "OP_GT", "OP_GE",
 	"BRACE_ROUND_OPEN", "BRACE_ROUND_CLOSE",
 	"BRACE_SQUARE_OPEN", "BRACE_SQUARE_CLOSE",
 	"SEP_QUESTION", "SEP_COLON", "SEP_COMMA"
@@ -38,8 +38,7 @@ t_OP_AND = r"\&"
 t_OP_XOR = r"\^"
 t_OP_NOT = r"\~"
 t_OP_EQ = r"\=\="
-t_OP_NE_1 = r"\<\>"
-t_OP_NE_2 = r"\!\="
+t_OP_NE = r"\<\>|\!\="
 t_OP_LT = r"\<"
 t_OP_LE = r"\<\="
 t_OP_GT = r"\>"

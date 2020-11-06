@@ -21,6 +21,10 @@ def p_error(p):
 	quit("yacc error: " + str(p))
 
 
+def tt(p, pos):
+	return p.slice[pos].type
+
+
 def p_expression_number(p):
 	'''expression : ATOM_NUM
 	              | ATOM_TEE
@@ -33,7 +37,7 @@ def p_expression_unop(p):
 	              | OP_MINUS expression
 	              | OP_NOT expression
 	'''
-	p[0] = ("EXP", 1, p[1], (p[2],))
+	p[0] = ("EXP", tt(p,1), 1, (p[2],))
 
 
 def p_expression_binop(p):
@@ -48,26 +52,25 @@ def p_expression_binop(p):
                 | expression OP_XOR expression  
                 | expression OP_AND expression  
                 | expression OP_EQ expression  
-                | expression OP_NE_1 expression  
-                | expression OP_NE_2 expression  
+                | expression OP_NE expression  
                 | expression OP_LT expression  
                 | expression OP_LE expression  
                 | expression OP_GT expression  
                 | expression OP_GE expression  
 	'''
-	p[0] = ('EXP', 2, p[2], (p[1], p[3]))
+	p[0] = ('EXP', 2, tt(p,2), (p[1], p[3]))
 
 
 def p_expression_ternary(p):
 	'''expression : BRACE_ROUND_OPEN expression SEP_QUESTION expression SEP_COLON expression BRACE_ROUND_CLOSE
 	'''
-	p[0] = ("EXP", 3, p[3], (p[2], p[4], p[6]))
+	p[0] = ("EXP", 3, "OP_TERNARY", (p[2], p[4], p[6]))
 
 
 def p_expression_braced(p):
 	'''expression : BRACE_ROUND_OPEN expression BRACE_ROUND_CLOSE
 	'''
-	p[0] = ("EXP", 1, p[1], (p[2],))
+	p[0] = ("EXP", 1, "OP_BRACED", (p[2],))
 
 
 def proc(text):
