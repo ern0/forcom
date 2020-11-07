@@ -10,7 +10,7 @@ logging.disable(logging.NOTSET)
 def main():
 
 	if True:
-		f = "t - +2"
+		f = " [3,4,8,1][t & 3] + 'XYZX'[t & 3]"
 		lex.proc(f)
 		yacc.proc(f)
 
