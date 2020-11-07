@@ -37,7 +37,8 @@ def p_expression_unop(p):
 	              | OP_MINUS expression
 	              | OP_NOT expression
 	'''
-	p[0] = ("EXP", tt(p,1), 1, (p[2],))
+	op = tt(p,1).replace("OP_","OP_UNARY_")
+	p[0] = ("EXP", 1, op, (p[2],))
 
 
 def p_expression_binop(p):
@@ -70,7 +71,7 @@ def p_expression_ternary(p):
 def p_expression_braced(p):
 	'''expression : BRACE_ROUND_OPEN expression BRACE_ROUND_CLOSE
 	'''
-	p[0] = ("EXP", 1, "OP_BRACED", (p[2],))
+	p[0] = ("EXP", 1, "BRACED", (p[2],))
 
 
 def proc(text):
