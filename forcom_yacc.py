@@ -73,6 +73,12 @@ def p_expr_ternary(p):
 	p[0] = ("EXPR", 3, "OP_TERNARY", (p[2], p[4], p[6]))
 
 
+def p_expr_braced(p):
+	'''expr : BRACE_ROUND_OPEN expr BRACE_ROUND_CLOSE
+	'''
+	p[0] = ("EXPR", 1, "BRACED", (p[2],))
+	
+
 def p_list_naked_is_expr(p):
 	'''expr : list_naked 	
 	'''

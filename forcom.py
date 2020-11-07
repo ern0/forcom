@@ -8,15 +8,13 @@ logging.disable(logging.NOTSET)
 
 
 def main():
-
-
+	
 	if True:
-		yacc.proc(" ( t % 2 ? 255 : t / 2 ) ")
+		yacc.proc("t << (4*2)")
 
 	if False:
-		f = " [3,4,8,1][t & 3] + 'XYZX'[t & 3]"
-		lex.proc(f)
-		yacc.proc(f)
+		yacc.proc(" [3,4,8,1][t & 3] + 'XYZX'[t & 3]")
+		yacc.proc(" ( t % 2 ? 255 : t / 2 ) ")
 
 	if False:
 		lex.proc(" 3-2 ")
