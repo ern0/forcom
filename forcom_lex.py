@@ -24,6 +24,8 @@ t_ignore_SPACE = r"\ "
 t_ignore_TAB = r"\t"
 t_ignore_CR = r"\r"
 t_ignore_LF = r"\n"
+t_ignore_COMMENT_BETWEEN = r'\/\*.*\*\/'
+t_ignore_COMMENT_LINE = r'\/\/.*$'
 
 t_ATOM_TEE = r"t"
 t_OP_PLUS = r"\+"
@@ -50,6 +52,7 @@ t_BRACE_SQUARE_CLOSE = r"\]"
 t_SEP_QUESTION = r"\?"
 t_SEP_COLON = r"\:"
 t_SEP_COMMA = r"\,"
+
 
 def t_error(token): pass
 

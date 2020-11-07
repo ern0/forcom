@@ -10,7 +10,7 @@ logging.disable(logging.NOTSET)
 def main():
 
 	if True:
-		f = "( t < 3 ? (10 + 11) * (20 + 21) : 0)"
+		f = "( t < 3 ? (10 + /*lof*/ 11) * (20 + 21) : 0) // lof"
 		lex.proc(f)
 		yacc.proc(f)
 
