@@ -9,7 +9,11 @@ logging.disable(logging.NOTSET)
 
 def main():
 
+
 	if True:
+		yacc.proc(" ( t % 1 ? 255 : t / 2 ) ")
+
+	if False:
 		f = " [3,4,8,1][t & 3] + 'XYZX'[t & 3]"
 		lex.proc(f)
 		yacc.proc(f)
