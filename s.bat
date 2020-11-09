@@ -1,3 +1,5 @@
 @eco off
 cls
-python forcom.py
+echo off
+python -B forcom.py
+erase __pycache__ /s /q > nul
