@@ -6,7 +6,7 @@ except: quit("FATAL: install module ply")
 
 
 tokens = (
-	"ATOM_TEE", "ATOM_NUM",
+	"ATOM_TEE", "ATOM_INT", "ATOM_FLOAT",
 	"ATOM_PL_HEX_C", "ATOM_PL_HEX_I", "ATOM_PL_HEX_M",
 	"ATOM_MI_HEX_C", "ATOM_MI_HEX_I", "ATOM_MI_HEX_M",
 	"ATOM_QUOTED",
@@ -80,7 +80,7 @@ def t_ATOM_QUOTED_DOUBLE(token):
 def t_ATOM_PL_HEX_C(token): 
 	r"0[xX][0-9a-fA-F]+"
 	
-	token.type = "ATOM_NUM"
+	token.type = "ATOM_INT"
 	token.value = int( str(token.value), 0)
 	return token
 
@@ -88,7 +88,7 @@ def t_ATOM_PL_HEX_C(token):
 def t_ATOM_PL_HEX_I(token): 
 	r"[0-9][0-9a-fA-F]+[hH]"		
 	
-	token.type = "ATOM_NUM"
+	token.type = "ATOM_INT"
 	token.value = int( str(token.value[:-1]), 16)
 	return token
 	
@@ -96,7 +96,7 @@ def t_ATOM_PL_HEX_I(token):
 def t_ATOM_PL_HEX_M(token): 
 	r"\$[0-9a-fA-F]+"
 	
-	token.type = "ATOM_NUM"
+	token.type = "ATOM_INT"
 	token.value = int( str(token.value[1:]), 16)
 	return token
 	
@@ -104,7 +104,7 @@ def t_ATOM_PL_HEX_M(token):
 def t_ATOM_MI_HEX_C(token): 
 	r"\-0[xX][0-9a-fA-F]+"
 	
-	token.type = "ATOM_NUM"
+	token.type = "ATOM_INT"
 	token.value = -1 * int( str(token.value[1:]), 0)
 	return token
 
@@ -112,7 +112,7 @@ def t_ATOM_MI_HEX_C(token):
 def t_ATOM_MI_HEX_I(token): 
 	r"\-[0-9][0-9a-fA-F]+[hH]"		
 	
-	token.type = "ATOM_NUM"
+	token.type = "ATOM_INT"
 	token.value = -1 * int( str(token.value[1:-1]), 16)
 	return token
 	
@@ -120,13 +120,18 @@ def t_ATOM_MI_HEX_I(token):
 def t_ATOM_MI_HEX_M(token): 
 	r"\-\$[0-9a-fA-F]+"
 	
-	token.type = "ATOM_NUM"
+	token.type = "ATOM_INT"
 	token.value = -1 * int( str(token.value[2:]), 16)
 	return token
 
 
-def t_ATOM_NUM(token):
-	r"[0-9]+[\.]?[0-9]?"
+def t_ATOM_FLOAT(token):
+	r"[0-9]+[\.][0-9]?"
+	return token
+
+
+def t_ATOM_INT(token):
+	r"[0-9]+[0-9]?"
 	return token
 
 

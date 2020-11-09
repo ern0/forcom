@@ -31,12 +31,20 @@ def tt(p, pos):
 	return p.slice[pos].type
 
 
+def p_expr_atom_constexpr(p):
+	'''expr : ATOM_INT OP_MUL ATOM_FLOAT
+	        | ATOM_FLOAT OP_MUL ATOM_INT
+	        | ATOM_INT OP_DIV ATOM_INT
+	'''
+	p[0] = ("ATOM", str(p[1]) + " " + str(p[2]) + " " + str(p[3]))
+
+
 def p_expr_atom(p):
-	'''expr : ATOM_NUM
+	'''expr : ATOM_INT
           | ATOM_TEE
 	'''
 	p[0] = ("ATOM", p[1])
-
+	
 
 def p_expr_unop(p):
 	'''expr : OP_PLUS expr
@@ -93,8 +101,8 @@ def p_list_is_expr(p):
 	
 
 def p_list_num_naked(p):
-	'''list_naked : ATOM_NUM SEP_COMMA ATOM_NUM
-	              | ATOM_NUM SEP_COMMA list_naked
+	'''list_naked : ATOM_INT SEP_COMMA ATOM_INT
+	              | ATOM_INT SEP_COMMA list_naked
 	'''
 	p[0] = ("LIST", "naked", (p[1], p[3]))
 

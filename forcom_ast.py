@@ -47,7 +47,7 @@ class Node:
 			+ self.value
 		)
 
-		indent += "    "
+		indent += " "*2
 
 		for child in self.children:
 			child.dump(indent)
