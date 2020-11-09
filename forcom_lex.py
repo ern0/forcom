@@ -139,8 +139,6 @@ def build(text):
 
 def proc(text):
 
-	print("LEX: \"" + text + "\"")
-
 	try:
 		lexer = build(text)
 
@@ -152,5 +150,5 @@ def proc(text):
 
 	except lex.LexError as e:
 		print("error: " + e.args[0] + " - " + e.text)
-		quit()
+		return None
 

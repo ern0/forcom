@@ -9,6 +9,7 @@ except:
 	
 import forcom_lex
 from forcom_lex import tokens
+from forcom_ast import Node
 
 
 precedence = (
@@ -118,22 +119,23 @@ def p_array(p):
 	
 def proc(text):
 
-	print("YACC: \"" + text + "\"")
+	node = Node()
 
 	try:
 		lexer = forcom_lex.build(text)
 		parser = yacc.yacc()
 		result = parser.parse(text)
+		if result is None: 
+			node.setError("yacc: parse error")
 		
 	except lex.LexError as e:
-		print("lex error: " + e.args[0] + " - " + e.text)
-		quit()	
+		node.setError("lex error: " + e.args[0] + " - " + e.text)
 		
 	except yacc.YaccError as e:
-		print("yacc error: " + str(e))
-		quit()
-
-	render(result)
+		node.setError("yacc error: " + str(e))
+		
+	if node.fail(): return node
+	return parse(result)
 
 
 def items2str(item):
@@ -155,75 +157,75 @@ def items2str(item):
 	return list_str
 	
 
-def render(item, indent = ""):
+def parse(item):
 	
-	indent += "    "
-	print(indent,end="")
-	dataNamePostfix = 1
-
 	itemType = item[0]	
 	
 	if itemType == "ATOM": 
-		renderAtom(item)
+		return parseAtom(item)
 	
 	elif itemType == "EXPR": 
-		renderExpr(item, indent)
+		return parseExpr(item)
 	
 	elif itemType == "LIST": 
-		renderListError(item)
+		return parseListError(item)
 	
 	elif itemType == "ARRAY": 
-		name = "data" + str(dataNamePostfix)
-		dataNamePostfix += 1
-		renderArray(item, indent, name)
+		return parseArray(item)
 	
-	else: 
-		quit("INTERNAL: item type: " + itemType)
-	
+	else:
+		node = Node(itemType)
+		node.setError("INTERNAL: invalid item type: " + itemType)
+		return node
+		
 
-def renderAtom(item):
+def parseAtom(item):
 		
-	atomValue = item[1]
-	print("ATOM: " + str(atomValue))
+	node = Node("ATOM")
+	node.setValue(item[1])
+	
+	return node
 		
 		
-def renderExpr(item, indent):
+def parseExpr(item):
 		
-	expMemberCount = item[1]
 	expType = item[2]
 	expMemberList = item[3]
 
-	print(
-		"EXPR(" 
-		+ str(expMemberCount) 
-		+ "): " 
-		+ str(expType) 
-	)
+	node = Node("EXPR")
+	node.setValue(expType)	
 
 	for memberItem in expMemberList: 
-		render(memberItem, indent)	
+		subNode = parse(memberItem)
+		node.addChild(subNode)	
+	
+	return node
 
 	
-def renderListError(item):
+def parseListError(item):
 		
+	node = Node()
 	subType = item[1]
 	
 	if subType == "naked":			 
-		quit("FATAL: value list outside array: " + items2str(item))
+		node.setError("FATAL: value list outside array: " + items2str(item))
 	
-	if subType == "num":
-		quit("FATAL: standalone value array: [" + items2str(item[2][0]) + "]")
+	elif subType == "num":
+		node.setError("FATAL: standalone value array: [" + items2str(item[2][0]) + "]")
 
-	if subType == "str":
-		quit("FATAL: standalone value string: \"" + item[2][0] + "\"")
+	elif subType == "str":
+		node.setError("FATAL: standalone value string: \"" + item[2][0] + "\"")
 
-	if subType == "array":
-		quit("FATAL: string in array: \"" + item[2][2][0] + "\"")
+	elif subType == "array":
+		node.setError("FATAL: string in array: \"" + item[2][2][0] + "\"")
 		
-	quit("INTERNAL: item LIST, subtype: " + subType)
+	else:
+		node.setError("INTERNAL: item LIST, subtype: " + subType)
 		
+	return node
+	
 
-def renderArray(item, indent, name):
+def parseArray(item):
 	
 	subType = item[1][0][1]
 	if subType == "num":
@@ -232,13 +234,11 @@ def renderArray(item, indent, name):
 		values = "\"" + item[1][0][2][0] + "\""
 	index = item[1][1]
 	
-	print(
-		"DATA(1):"
-		+ " name="
-		+ name
-		+ " values="
-		+ values
-	)
+	node = Node("DATA")
+	node.setValue(values)
+
+	subNode = parse(index)
+	node.append(subNode)
 	
-	render(index, indent)
+	return node
 	
