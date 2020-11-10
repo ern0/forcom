@@ -126,7 +126,7 @@ def t_ATOM_MI_HEX_M(token):
 
 
 def t_ATOM_FLOAT(token):
-	r"[0-9]+[\.][0-9]?"
+	r"[0-9]+[\.][0-9]+"
 	return token
 
 

@@ -15,8 +15,16 @@ class Node:
 		self.error = None
 
 	
+	def getType(self):
+		return self.nodeType
+		
+		
 	def setValue(self, value):
 		self.value = str(value)
+	
+	
+	def getValue(self):
+		return self.value
 		
 	
 	def setError(self, error):
@@ -33,6 +41,10 @@ class Node:
 	
 	def getChildrenCount(self):
 		return len(self.children)
+	
+	
+	def getChildren(self):
+		return self.children
 		
 	
 	def dump(self, indent = ""):
