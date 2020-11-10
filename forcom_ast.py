@@ -14,6 +14,18 @@ class Node:
 		self.children = []
 		self.error = None
 
+
+	def cloneFrom(self, node):
+		
+		self.nodeType = node.nodeType
+		self.value = node.value
+		self.children = node.children
+		self.error = node.error
+		
+
+	def setType(self, nodeType):
+		self.nodeType = nodeType
+		
 	
 	def getType(self):
 		return self.nodeType
@@ -43,8 +55,20 @@ class Node:
 		return len(self.children)
 	
 	
+	def isLeaf(self):
+		return len(self.children) == 0
+	
+	
 	def getChildren(self):
 		return self.children
+		
+	
+	def getChild(self, index):
+		return self.children[index]
+		
+	
+	def removeChildren(self):
+		self.children = []
 		
 	
 	def dump(self, indent = ""):

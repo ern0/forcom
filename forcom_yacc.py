@@ -31,14 +31,6 @@ def tt(p, pos):
 	return p.slice[pos].type
 
 
-def p_expr_atom_constexpr(p):
-	'''expr : ATOM_INT OP_MUL ATOM_FLOAT
-	        | ATOM_FLOAT OP_MUL ATOM_INT
-	        | ATOM_INT OP_DIV ATOM_INT
-	'''
-	p[0] = ("ATOM", str(p[1]) + " " + str(p[2]) + " " + str(p[3]))
-
-
 def p_expr_atom(p):
 	'''expr : ATOM_INT
           | ATOM_TEE

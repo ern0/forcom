@@ -7,7 +7,13 @@ import forcom_tree_opt as opt
 
 def main():
 
-	node = yacc.proc("t * 1000 / 3")
+	proc("1 * 2 * 3 * 4 * 5 + 1 * t")
+	
+
+def proc(f):
+	
+	print(f)
+	node = yacc.proc(f)
 	node.dump()
 	print("--")
 	opt.proc(node)
