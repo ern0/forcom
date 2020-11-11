@@ -11,7 +11,6 @@ def proc(node):
 		changeCount = procResolveConstPairs(node)
 		changeCount += procResolveSingleAtomInBrace(node)
 		if changeCount == 0: break
-		print("////")
 	
 	
 def procChangeInlineConsts(node):
