@@ -8,6 +8,8 @@ import forcom_render_pseudo as rp
 
 
 def main():
+	
+	return processText("( t % 8 == 8 ? 1 : 0 )")
 
 	if len(sys.argv) < 2:
 		quit("specify file")
@@ -22,16 +24,22 @@ def processFile(fnam):
 	formula = formula.replace("\n"," ")
 	fileHandle.close()
 	
+	processText(formula)
+	
+	
+def processText(formula):
+	
 	print(formula.strip())
 	print("--")
 		
 	node = yacc.proc(formula)
 	opt.proc(node)	
-	#node.dump()
-	#print("--")
 	
 	renderer = rp.PseudoRenderer()
 	renderer.proc(node)
+
+	node.dump()
+	print("--")
 	renderer.dump()
 
 if __name__ == "__main__": 

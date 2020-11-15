@@ -5,16 +5,57 @@ import forcom_ast as ast
 
 class Instruction:
 
-	def __init__(self):
+	def __init__(self, lvalue, op, rvalueLeft, rvalueRight):
 		
-		self.op = None
-		self.lvalue = None
-		self.rvalue = None
+		self.lvalue = lvalue
+		self.op = op
+		self.rvalueLeft = rvalueLeft
+		self.rvalueRight = rvalueRight
+		
+		if len(self.rvalueLeft) == 0:
+			self.parms = 1
+		else:
+			self.parms = 2
 	
 	
-	def dump(self):
-		print(self.instType)
+	def render(self):
+		
+		bracet = False
+		if "=" in self.op: bracet = True
+		if "<" in self.op: bracet = True
+		if ">" in self.op: bracet = True
+		
+		result = self.lvalue + " = "
+		
+		if bracet: 
+			result += "("
+		
+		if self.parms == 1:
+			result += self.op + self.rvalueRight
+			
+		else:
+			result += self.rvalueLeft + " "
+			result += self.op + " " + self.rvalueRight
+		
+		if bracet:
+			result += ")"
+		
+		return result + "\n"
+
+
+class Ternary:
 	
+	def __init__(self, cond, trueValue, falseValue):
+	
+		self.cond = cond
+		self.trueValue = trueValue
+		self.falseValue = falseValue
+	
+	
+	def render(self):
+		
+		return "<ternary>\n"
+		
 
 class PseudoRenderer:
 	
@@ -23,6 +64,10 @@ class PseudoRenderer:
 		self.varId = 0
 	
 	
+	def dump(self):
+		print(self.render(), end="")
+
+
 	def nextVar(self):
 		
 		while True:
@@ -35,7 +80,29 @@ class PseudoRenderer:
 			
 		return result
 		
+
+	def createInstruction(self, lvalue, opStr, rvalueLeft, rvalueRight):
+
+		item = Instruction(lvalue, opStr, rvalueLeft, rvalueRight)
+		self.items.append(item)
+
+	
+	def createTernary(self, cond, tvalue, fvalue):
 		
+		item = Ternary(cond, tvalue, fvalue)
+		self.items.append(item)
+		
+		
+	def render(self):
+		
+		result = ""
+		for item in self.items:
+			result += item.render()
+			
+		if result.strip() == "": result = "t\n"
+		return result
+
+	
 	def proc(self, node):
 		
 		for subNode in node.getChildren():
@@ -55,23 +122,27 @@ class PseudoRenderer:
 			self.procExpr(node)
 			
 		else:
-			quit("INTERNAL: no renderer for node type: " + nodeType)
+			print("INTERNAL: no renderer for node type")
+			node.dump()
+			quit()
 
 
 	def procExpr(self, node):
-		
-		a = node.getValue().split("_")
-		
-		if a[0] == "OP": 
+				
+		v = node.getValue()
+		if v.split("_")[0] == "OP": 
 			self.procOpExpr(node)
 		
 		else:
-			quit("INTERNAL: no renderer for expr type: " + a[0])
+			print("INTERNAL: no renderer for expression type")
+			node.dump()
+			quit()
 		
 	
 	def procOpExpr(self, node):
 		
-		op = node.getValue().split("_")[1]
+		v = node.getValue()
+		op = v[v.find("_") + 1:]
 
 		if op == "PLUS": 
 			self.procOp2(node, "+")
@@ -121,31 +192,59 @@ class PseudoRenderer:
 		elif op == "GE":
 			self.procOp2(node, ">=")
 
-		else:
-			quit("INTERNAL: no renderer for op type: " + op)
+		elif op == "UNARY_MINUS":
+			self.procOp1(node, "-")
 
+		elif op == "UNARY_PLUS":
+			self.procOp1(node, "+")
+
+		elif op == "TERNARY":
+			self.procOpTernary(node)
+			
+		else:
+			print("INTERNAL: no renderer for operand type")
+			node.dump()
+			quit()
+			
+	
+	def procOp1(self, node, opStr):
+		
+		if opStr == "+": return
+		
+		child = node.getChildren()[0]
+		rtype = node.getType()
+		rvalue = child.getValue()
+		
+		if rtype == "EXPR":
+			lvalue = rvalue
+		else:
+			lvalue = self.nextVar()
+		
+		node.setValue(lvalue)
+		
+		self.createInstruction(lvalue, opStr, "", rvalue)
+		
 			
 	def procOp2(self, node, opStr):
 
 		children = node.getChildren()
-		lvalue = children[0].getValue()
-		if lvalue == "t": lvalue = self.nextVar()
+		rtypeLeft = children[0].getType() 
+		rtypeRight = children[1].getType() 
 		rvalueLeft = children[0].getValue()
 		rvalueRight = children[1].getValue()
 
+		if rtypeLeft == "EXPR":
+			lvalue = rvalueLeft
+		elif rtypeRight == "EXPR":
+			lvalue = rvalueRight
+		else:
+			lvalue = self.nextVar()	
+
 		node.setValue(lvalue)
 		
-		print(
-			lvalue
-			+ " = "
-			+ rvalueLeft
-			+ " " + opStr + " "
-			+ rvalueRight
-		)
+		self.createInstruction(lvalue, opStr, rvalueLeft, rvalueRight)
 
 
-
-	def dump(self):
-		
-		for item in self.items:
-			item.dump()
+	def procOpTernary(self, node):
+	
+		self.createTernary("cond", "true" , "false")

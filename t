@@ -1,4 +1,4 @@
 #!/bin/bash
 
 clear
-python3 -B test.py
+python3 -B app/test.py

@@ -3,19 +3,30 @@
 import forcom_lex as lex
 import forcom_yacc as yacc
 import logging
+import forcom_tree_opt as opt
+import forcom_render_pseudo as rp
+
 logging.disable(logging.CRITICAL)
 logging.disable(logging.NOTSET)
 
 
 def proc(text):
-	node = yacc.proc(text)
-	node.dump()
+
+	print(text)
+	print("--")
+
+	node = yacc.proc(text)	
+	opt.proc(node)		
+	renderer = rp.PseudoRenderer()
+	renderer.proc(node)
+	renderer.dump()
 	
 
 def main():
 	
-	if False:
-		proc("t << (4*2)")
+	
+	if True:
+		proc("t * (t + 2)")
 
 	if False:
 		proc(" [3,4,8,1][t & 3] + 'XYZX'[t & 3]")
