@@ -82,12 +82,11 @@ class PseudoRenderer:
 		elif op == "MUL":
 			self.procOp2(node, "*")
 
-
 		elif op == "DIV":
 			self.procOp2(node, "/")
 
 		elif op == "MOD":
-			self.procOp2(node, "/")
+			self.procOp2(node, "%")
 
 		elif op == "SHL":
 			self.procOp2(node, "<<")
@@ -103,6 +102,24 @@ class PseudoRenderer:
 
 		elif op == "XOR":
 			self.procOp2(node, "^")
+
+		elif op == "EQ":
+			self.procOp2(node, "==")
+		
+		elif op == "NE":
+			self.procOp2(node, "!=")
+		
+		elif op == "LT":
+			self.procOp2(node, "<")
+
+		elif op == "LE":
+			self.procOp2(node, "<=")
+
+		elif op == "GT":
+			self.procOp2(node, ">")
+
+		elif op == "GE":
+			self.procOp2(node, ">=")
 
 		else:
 			quit("INTERNAL: no renderer for op type: " + op)
