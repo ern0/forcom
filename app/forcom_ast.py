@@ -87,4 +87,3 @@ class Node:
 
 		for child in self.children:
 			child.dump(indent)
-

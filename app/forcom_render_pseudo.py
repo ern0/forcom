@@ -45,17 +45,24 @@ class Instruction:
 
 class Ternary:
 	
-	def __init__(self, cond, trueValue, falseValue):
+	def __init__(self, lvalue, cond, tval, fval):
 	
+		self.lvalue = lvalue
 		self.cond = cond
-		self.trueValue = trueValue
-		self.falseValue = falseValue
+		self.tval = tval
+		self.fval = fval
 	
 	
 	def render(self):
 		
-		return "<ternary>\n"
-		
+		result = "if " + self.cond + " then \n"
+		result += "  " + self.lvalue + " = " + self.tval + "\n"
+		result += "else \n"
+		result += "  " + self.lvalue + " = " + self.fval + "\n"
+		result += "endif \n"
+
+		return result
+
 
 class PseudoRenderer:
 	
@@ -87,9 +94,9 @@ class PseudoRenderer:
 		self.items.append(item)
 
 	
-	def createTernary(self, cond, tvalue, fvalue):
+	def createTernary(self, lvalue, cond, tvalue, fvalue):
 		
-		item = Ternary(cond, tvalue, fvalue)
+		item = Ternary(lvalue, cond, tvalue, fvalue)
 		self.items.append(item)
 		
 		
@@ -246,5 +253,25 @@ class PseudoRenderer:
 
 
 	def procOpTernary(self, node):
-	
-		self.createTernary("cond", "true" , "false")
+		
+		children = node.getChildren()
+
+		condType = children[0].getType()
+		condValue = children[0].getValue()
+		trueType = children[1].getType()
+		trueValue = children[1].getValue()
+		falseType = children[2].getType()
+		falseValue = children[2].getValue()
+
+		if condType == "EXPR":
+			lvalue = condValue
+		elif trueType == "EXPR":
+			lvalue = trueValue
+		elif falseType == "EXPR":
+			lvalue = falseValue
+		else:
+			lvalue = self.nextVar()
+
+		node.setValue(lvalue)
+
+		self.createTernary(lvalue, condValue, trueValue, falseValue)
