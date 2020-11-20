@@ -9,7 +9,8 @@ import forcom_render_pseudo as rp
 
 def main():
 	
-	return processText("t + ( t % 8 == 8 ? 1 : 0 )")
+	if True:
+		return processText("t + ( t % 8 == 8 ? 1 : 0 )")
 
 	if len(sys.argv) < 2:
 		quit("specify file")
