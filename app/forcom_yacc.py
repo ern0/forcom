@@ -238,7 +238,7 @@ def parseArray(item):
 	node.setValue(values)
 
 	subNode = parse(index)
-	node.append(subNode)
+	node.addChild(subNode)
 	
 	return node
 	

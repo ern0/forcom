@@ -64,10 +64,43 @@ class Ternary:
 		return result
 
 
+class Data:
+
+	def __init__(self, lvalue, dataName, dataValue):
+
+		self.lvalue = lvalue
+		self.dataName = dataName
+		self.dataValue = dataValue
+
+
+	def render(self):
+
+		result = self.lvalue + " = "
+		result += self.dataName
+		result += "[" + self.lvalue + "]\n"
+		
+		return result
+
+
+	def renderData(self):
+
+		values = self.dataValue
+		values = values.replace("[","")
+		values = values.replace("]","")
+		values = values.strip()
+
+		result = self.dataName + ":"
+		result += "\tdb " + values + "\n"
+
+		return result
+
+
 class PseudoRenderer:
 	
 	def __init__(self):
-		self.items = []
+
+		self.instructionItems = []
+		self.dataItems = []
 		self.varId = 0
 	
 	
@@ -86,27 +119,50 @@ class PseudoRenderer:
 			break
 			
 		return result
-		
+
+
+	def nextDataName(self):
+
+		numero = len(self.dataItems) + 1
+		return "data" + str(numero)
+
 
 	def createInstruction(self, lvalue, opStr, rvalueLeft, rvalueRight):
 
 		item = Instruction(lvalue, opStr, rvalueLeft, rvalueRight)
-		self.items.append(item)
+		self.instructionItems.append(item)
 
 	
 	def createTernary(self, lvalue, cond, tvalue, fvalue):
 		
 		item = Ternary(lvalue, cond, tvalue, fvalue)
-		self.items.append(item)
+		self.instructionItems.append(item)
 		
+
+	def createData(self, lvalue, dataValue):
+
+		dataName = self.nextDataName()
+
+		item = Data(lvalue, dataName, dataValue)
+		self.instructionItems.append(item)
+		self.dataItems.append(item)
 		
+
 	def render(self):
 		
 		result = ""
-		for item in self.items:
-			result += item.render()
+		for dataItem in self.dataItems:
+			result += dataItem.renderData()
+		
+		if result.strip() != "":
+			result += "\n"
+
+		for instructionItem in self.instructionItems:
+			result += instructionItem.render()
 			
-		if result.strip() == "": result = "t\n"
+		if result.strip() == "": 
+			result = "t\n"
+		
 		return result
 
 	
@@ -128,8 +184,11 @@ class PseudoRenderer:
 		elif nodeType == "EXPR":
 			self.procExpr(node)
 			
+		elif nodeType == "DATA":
+			self.procData(node)
+
 		else:
-			print("INTERNAL: no renderer for node type")
+			print("INTERNAL: no renderer for node type: " + nodeType)
 			node.dump()
 			quit()
 
@@ -275,3 +334,13 @@ class PseudoRenderer:
 		node.setValue(lvalue)
 
 		self.createTernary(lvalue, condValue, trueValue, falseValue)
+
+
+	def procData(self, node):
+
+		child = node.getChildren()[0]
+
+		dataValue = node.getValue()
+		lvalue = child.getValue()
+
+		self.createData(lvalue, dataValue)

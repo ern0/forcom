@@ -10,7 +10,7 @@ import forcom_render_pseudo as rp
 def main():
 	
 	if True:
-		return processText("t + ( t % 8 == 8 ? 1 : 0 )")
+		return processText("[1,2,3,4][(t % 2 == 1 ? $ff : 0)]")
 
 	if len(sys.argv) < 2:
 		quit("specify file")
@@ -32,15 +32,15 @@ def processText(formula):
 	
 	print(formula.strip())
 	print("--")
-		
+	
 	node = yacc.proc(formula)
 	opt.proc(node)	
 	
 	renderer = rp.PseudoRenderer()
 	renderer.proc(node)
-
-	node.dump()
-	print("--")
+	if False:
+		node.dump()
+		print("--")
 	renderer.dump()
 
 if __name__ == "__main__": 
