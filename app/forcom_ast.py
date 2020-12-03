@@ -13,6 +13,7 @@ class Node:
 		self.value = None
 		self.children = []
 		self.error = None
+		self.parsedValue = None
 
 
 	def cloneFrom(self, node):
@@ -21,6 +22,7 @@ class Node:
 		self.value = node.value
 		self.children = node.children
 		self.error = node.error
+		self.parsedValue = node.parsedValue
 		
 
 	def setType(self, nodeType):
@@ -32,6 +34,11 @@ class Node:
 		
 		
 	def setValue(self, value):
+		self.value = str(value)
+	
+
+	def setParsedValue(self, value):
+		self.parsedValue = str(value)
 		self.value = str(value)
 	
 	
@@ -76,12 +83,12 @@ class Node:
 		if self.error is not None:
 			quit(self.error)
 		
-		print(
-			indent
-			+ self.nodeType
-			+ ": "
-			+ self.value
-		)
+		print(indent, end="")
+		print(self.nodeType + ": ", end="")
+		print(self.parsedValue, end="")
+		if self.parsedValue != self.value: 
+			print(" => " + self.value, end = "")		
+		print("")
 
 		indent += " "*2
 

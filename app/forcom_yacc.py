@@ -182,7 +182,7 @@ def parse(item):
 def parseAtom(item):
 		
 	node = Node("ATOM")
-	node.setValue(item[1])
+	node.setParsedValue(item[1])
 	
 	return node
 		
@@ -193,7 +193,7 @@ def parseExpr(item):
 	expMemberList = item[3]
 
 	node = Node("EXPR")
-	node.setValue(expType)	
+	node.setParsedValue(expType)	
 
 	for memberItem in expMemberList: 
 		subNode = parse(memberItem)
@@ -235,7 +235,7 @@ def parseArray(item):
 	index = item[1][1]
 	
 	node = Node("DATA")
-	node.setValue(values)
+	node.setParsedValue(values)
 
 	subNode = parse(index)
 	node.addChild(subNode)
