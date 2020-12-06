@@ -15,7 +15,7 @@ class Node:
 		self.error = None
 		self.parsedValue = None
 		self.formula = None
-		self.name = None
+		self.numero = None
 
 
 	def cloneFrom(self, node):
@@ -26,7 +26,7 @@ class Node:
 		self.error = node.error
 		self.parsedValue = node.parsedValue
 		self.formula = node.formula
-		self.name = node.name
+		self.numero = node.numero
 		
 
 	def setFormula(self, formula):
@@ -37,12 +37,12 @@ class Node:
 		return self.formula
 
 
-	def setName(self, name):
-		self.name = name
+	def setNumero(self, numero):
+		self.numero = numero
 
 	
-	def getName(self):
-		return self.name
+	def getNumero(self):
+		return self.numero
 		
 		
 	def setType(self, nodeType):
@@ -100,6 +100,10 @@ class Node:
 	
 	def dump(self, indent = ""):
 		
+		if indent == "":
+			print(self.formula)
+			print("--")
+
 		if self.error is not None:
 			quit(self.error)
 		

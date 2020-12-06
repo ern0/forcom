@@ -13,8 +13,17 @@ class GraphvizRenderer:
 		self.root = node
 
 		formula = self.root.getFormula() 
-		self.dot = graphviz.Digraph(comment = formula)
-		self.id = 0
+		self.dot = graphviz.Digraph(
+			comment = formula
+			,body = { 
+				"\trankdir=\"BT\";"
+				,"\tlabel=\"" + formula + "\";"
+				,"\tlabelloc=top;"
+    		,"\tlabeljust=left;"
+
+			}
+		)
+		self.numero = 0
 
 		self.renderNode(None, self.root)
 
@@ -24,17 +33,29 @@ class GraphvizRenderer:
 		nodeType = node.getType()
 		if nodeType == "DATA": return
 
-		self.id += 1
-		name = "node_" + str(self.id)
-		node.setName(name)
+		self.numero += 1
+		node.setNumero(self.numero)
 
-		self.dot.node(name, nodeType)
+		nodeId = self.mkId(node)
+		self.dot.node(nodeId, self.mkTitle(node))
+
 		if parentNode is not None:
-			self.dot.edge(name, parentNode.getName())
+			self.dot.edge(nodeId, self.mkId(parentNode)) 
 
 		for subNode in node.getChildren():
 			self.renderNode(node, subNode)
 
+
+	def mkId(self, node):
+		return "node_" + str(node.getNumero())
+
+	def mkTitle(self, node):
+
+		title = node.getType()
+		title += ": "
+		title += str(node.getValue())
+
+		return title
 
 	def dump(self):
 		self.dot.render(view=True)

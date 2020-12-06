@@ -48,9 +48,6 @@ def normalize(formula):
 
 def processText(formula, prod):
 	
-	print(formula)
-	print("--")
-	
 	node = yacc.proc(formula)
 	opt.proc(node)	
 

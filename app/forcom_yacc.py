@@ -118,14 +118,14 @@ def p_array(p):
 	p[0] = ("ARRAY", (p[1], p[3]))
 	
 	
-def proc(text):
+def proc(formula):
 
 	node = Node()
 
 	try:
-		lexer = forcom_lex.build(text)
+		lexer = forcom_lex.build(formula)
 		parser = yacc.yacc()
-		result = parser.parse(text)
+		result = parser.parse(formula)
 		if result is None: 
 			node.setError("yacc: parse error")
 		
@@ -135,8 +135,11 @@ def proc(text):
 	except yacc.YaccError as e:
 		node.setError("yacc error: " + str(e))
 		
-	if node.fail(): return node
-	return parse(result)
+	if not node.fail(): 
+		node = parse(result)
+		node.setFormula(formula)
+
+	return node
 
 
 def items2str(item):

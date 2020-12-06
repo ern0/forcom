@@ -102,9 +102,12 @@ class PseudoRenderer:
 		self.instructionItems = []
 		self.dataItems = []
 		self.varId = 0
+		self.root = None
 	
 	
 	def dump(self):
+		print(self.root.getFormula())
+		print("--")
 		print(self.render(), end="")
 
 
@@ -168,6 +171,9 @@ class PseudoRenderer:
 	
 	def proc(self, node):
 		
+		if self.root is None:
+			self.root = node
+
 		for subNode in node.getChildren():
 			self.proc(subNode)
 
