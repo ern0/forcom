@@ -24,6 +24,7 @@ precedence = (
 )
 
 def p_error(p):
+	if p is None: p_error("empty source")
 	quit("yacc error: " + str(p))
 
 

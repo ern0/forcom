@@ -14,6 +14,8 @@ class Node:
 		self.children = []
 		self.error = None
 		self.parsedValue = None
+		self.formula = None
+		self.name = None
 
 
 	def cloneFrom(self, node):
@@ -23,8 +25,26 @@ class Node:
 		self.children = node.children
 		self.error = node.error
 		self.parsedValue = node.parsedValue
+		self.formula = node.formula
+		self.name = node.name
 		
 
+	def setFormula(self, formula):
+		self.formula = formula
+
+
+	def getFormula(self):
+		return self.formula
+
+
+	def setName(self, name):
+		self.name = name
+
+	
+	def getName(self):
+		return self.name
+		
+		
 	def setType(self, nodeType):
 		self.nodeType = nodeType
 		
