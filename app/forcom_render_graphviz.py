@@ -58,5 +58,10 @@ class GraphvizRenderer:
 		return title
 
 	def dump(self):
-		self.dot.render(view=True)
+		self.dot.render(
+			view = True
+			,cleanup = True
+			,format = "png"
+			,filename = "ast"
+		)
 
