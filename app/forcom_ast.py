@@ -108,10 +108,10 @@ class Node:
 			quit(self.error)
 		
 		print(indent, end="")
-		print("T:[" + self.nodeType, end="]")
-		print(" V:[" + self.parsedValue, end="]")
+		print("Type:[" + self.nodeType, end="]")
+		print(" Val:[" + self.parsedValue, end="]")
 		if self.parsedValue != self.value: 
-			print(" P=" + self.value, end = "")		
+			print(" Var:[" + self.value, end = "]")		
 		print("")
 
 		indent += " "*2

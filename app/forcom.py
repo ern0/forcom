@@ -6,6 +6,7 @@ import forcom_ast as ast
 import forcom_tree_opt as opt
 import forcom_render_pseudo as rp
 import forcom_render_graphviz as rg
+import forcom_render_asm as ra
 
 
 def main():
@@ -58,15 +59,19 @@ def processText(formula, prod):
 		graph = rg.GraphvizRenderer()
 		graph.proc(node)
 		graph.dump()
+		node.dump()
 
 	elif prod == "pseudo":
 		pseudo = rp.PseudoRenderer()
 		pseudo.proc(node)
 		pseudo.dump()
+		print()
+		node.dump()
 	
 	elif prod == "asm":
-		pass
-		# TODO
+		asm = ra.AsmRenderer()
+		asm.proc(node)
+		asm.dump()
 
 
 if __name__ == "__main__": 
