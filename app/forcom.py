@@ -53,19 +53,19 @@ def processText(formula, prod):
 	node = yacc.proc(formula)
 	opt.proc(node)
 
-	print(formula)
-	print("--")
-
 	if prod == "tree":
+		print(formula, end="--\n")
 		node.dump()
 
 	elif prod == "graph":
+		print(formula, end="--\n")
 		graph = rg.GraphvizRenderer()
 		graph.proc(node)
 		graph.dump()
 		node.dump()
 
 	elif prod == "pseudo":
+		print(formula, end="--\n")
 		pseudo = rp.PseudoRenderer()
 		pseudo.proc(node)
 		pseudo.dump()
@@ -75,7 +75,7 @@ def processText(formula, prod):
 	elif prod == "unopt":
 		unopt = ru.UnoptimizedRenderer()
 		unopt.proc(node)
-		unopt.dump()
+		unopt.render(node)
 
 	elif prod == "asm":
 		asm = ru.AsmRenderer()

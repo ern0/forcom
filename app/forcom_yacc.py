@@ -18,8 +18,8 @@ precedence = (
 	("left", "OP_AND"),
 	("left", "OP_EQ", "OP_NE"),
 	("left", "OP_LT", "OP_LE", "OP_GT", "OP_GE"),
-	("left", "OP_SHL", "OP_SHR"),
 	("left", "OP_PLUS", "OP_MINUS"),
+	("left", "OP_SHL", "OP_SHR"),
 	("left", "OP_MUL", "OP_DIV", "OP_MOD")
 )
 
