@@ -33,7 +33,7 @@ class UnoptimizedRenderer:
 		
 		if node.getType() == "ATOM": return
 
-		self.addInst("; node #" + str(node.getNumero()))
+		#self.addInst("; node #" + str(node.getNumero()))
 		children = node.getChildren()
 
 		if node.getValue() == "OP_PLUS":
