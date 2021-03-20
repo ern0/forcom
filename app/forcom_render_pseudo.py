@@ -23,7 +23,9 @@ class Instruction:
 		bracet = False
 		if "=" in self.op: bracet = True
 		if "<" in self.op: bracet = True
+		if "<<" in self.op: bracet = False
 		if ">" in self.op: bracet = True
+		if ">>" in self.op: bracet = False
 		
 		result = self.lvalue + " = "
 		
@@ -106,8 +108,6 @@ class PseudoRenderer:
 	
 	
 	def dump(self):
-		print(self.root.getFormula())
-		print("--")
 		print(self.render(), end="")
 
 

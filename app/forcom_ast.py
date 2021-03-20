@@ -1,11 +1,11 @@
-#!/usr/bin/env python3 -B
-
 import forcom_lex as lex
 import forcom_yacc as yacc
 import sys
 
 
 class Node:
+
+	nextNumero = 1
 	
 	def __init__(self, nodeType = None):
 		
@@ -15,7 +15,8 @@ class Node:
 		self.error = None
 		self.parsedValue = None
 		self.formula = None
-		self.numero = None
+		self.numero = Node.nextNumero
+		Node.nextNumero += 1
 
 
 	def cloneFrom(self, node):
@@ -97,22 +98,28 @@ class Node:
 	def removeChildren(self):
 		self.children = []
 		
-	
-	def dump(self, indent = ""):
-		
-		if indent == "":
-			print(self.formula)
-			print("--")
+
+	def dumpFlat(self, indent = ""):
 
 		if self.error is not None:
 			quit(self.error)
-		
+
 		print(indent, end="")
-		print("Type:[" + self.nodeType, end="]")
-		print(" Val:[" + self.parsedValue, end="]")
+
+		print(self.nodeType, end="")
+		if self.nodeType == "EXPR":
+			print(" #" + str(self.numero), end="")
+		print(": ", end="")
+
+		print(self.parsedValue, end="")
 		if self.parsedValue != self.value: 
-			print(" Var:[" + self.value, end = "]")		
+			print(" (" + self.value, end = ")")		
 		print("")
+
+
+	def dump(self, indent = ""):
+				
+		self.dumpFlat(indent)
 
 		indent += " "*2
 

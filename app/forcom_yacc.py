@@ -148,7 +148,7 @@ def items2str(item):
 	while True:
 
 		value = item[2][0]
-		if list_str is not "": list_str += ","
+		if list_str != "": list_str += ","
 		list_str += str(value)
 		
 		value = item[2][1]

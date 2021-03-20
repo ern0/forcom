@@ -1,5 +1,3 @@
-#!/usr/bin/env python3 -B
-
 from forcom_ast import Node
 
 

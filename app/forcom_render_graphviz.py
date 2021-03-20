@@ -1,5 +1,3 @@
-#!/usr/bin/env python3 -B
-
 try: import graphviz
 except: quit("FATAL: install module graphviz")
 import forcom_ast as ast
@@ -52,6 +50,8 @@ class GraphvizRenderer:
 	def mkTitle(self, node):
 
 		title = node.getType()
+		if title == "EXPR": 
+			title += " #" + str(node.getNumero())
 		title += ": "
 		title += str(node.getValue())
 

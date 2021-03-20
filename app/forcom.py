@@ -6,6 +6,7 @@ import forcom_ast as ast
 import forcom_tree_opt as opt
 import forcom_render_pseudo as rp
 import forcom_render_graphviz as rg
+import forcom_render_unopt as ru
 import forcom_render_asm as ra
 
 
@@ -16,7 +17,7 @@ def main():
 		if sys.argv[2] == "tree": argError = False
 		if sys.argv[2] == "graph": argError = False
 		if sys.argv[2] == "pseudo": argError = False
-		if sys.argv[2] == "asm": argError = False
+		if sys.argv[2] == "unopt": argError = False
 	if argError:
 		quit("specify file (or '-' for stdin) and mode (tree|graph|pseudo|asm)")
 
@@ -50,7 +51,10 @@ def normalize(formula):
 def processText(formula, prod):
 	
 	node = yacc.proc(formula)
-	opt.proc(node)	
+	opt.proc(node)
+
+	print(formula)
+	print("--")
 
 	if prod == "tree":
 		node.dump()
@@ -68,11 +72,15 @@ def processText(formula, prod):
 		print()
 		node.dump()
 	
+	elif prod == "unopt":
+		unopt = ru.UnoptimizedRenderer()
+		unopt.proc(node)
+		unopt.dump()
+
 	elif prod == "asm":
-		asm = ra.AsmRenderer()
+		asm = ru.AsmRenderer()
 		asm.proc(node)
 		asm.dump()
-
 
 if __name__ == "__main__": 
 	main()
