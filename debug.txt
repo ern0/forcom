@@ -1,0 +1,4 @@
+n single.com
+l
+g=100
+q
