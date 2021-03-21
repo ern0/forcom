@@ -12,12 +12,13 @@ class UnoptimizedRenderer:
 
 		debug = True
 
-		self.addInst("ORG 100H")
-		self.addInst("")
-
 		if debug:
-			self.addInst("MOV BX,5")
+			self.addInst("ORG 100H")
 			self.addInst("")
+			self.addInst("MOV SI,12")
+			self.addInst("")
+		else:
+			self.addLabel("formula")
 
 		self.procRecursive(node)
 		self.addInst("")
@@ -86,45 +87,45 @@ class UnoptimizedRenderer:
 			self.procOpGe(node)
 
 
-	def addInst(self, inst):
-		
+	def addInst(self, inst):		
 		if inst != "": inst = "\t" + inst
 		self.code.append(inst)
 
-
+	def addLabel(self, label):
+		if ":" not in label: label += ":"
+		self.code.append(label)
+		
 	def addStor(self, node):
 		
-		name = self.getLabel(node)
-
-		inst = "MOV [" + name + "],AX"
+		inst = "MOV "+ self.getVarRef(node) + ",AX"
 		self.addInst(inst)
 
-		stor = name + ":\tDW 0"
+		stor = self.getVarDef(node) + "\tDW 0"
 		self.bss.append(stor)
 
 
-	def getLabel(self, node):
-		return "var" + str(node.getNumero())
+	def getSymbolName(self, node, prefix):
+		return prefix + str(node.getNumero())
 
 
-	def getRepr(self, node):
+	def getVarRef(self, node):
 
 		if node.getType() == "ATOM": 
-			return self.getReprAtom(node)
+			if node.getValue() == "t": 
+				return "SI"
+			else: 
+				return str(node.getValue())
 		if node.getType() == "EXPR":
-			return self.getReprExpr(node)
+			return "[" + self.getSymbolName(node, "VAR") + "]"
 	
+	def getVarDef(self, node):
+		return self.getSymbolName(node, "VAR") + ":"
 
-	def getReprAtom(self, node):
+	def getLabelRef(self, node):
+		return self.getSymbolName(node, "LBL")
 
-		if node.getValue() == "t": 
-			return "BX"
-		else:
-			return str(node.getValue())
-
-
-	def getReprExpr(self, node):
-		return "[" + self.getLabel(node) + "]"
+	def getLabelDef(self, node):
+		return self.getSymbolName(node, "LBL") + ":"
 	
 
 	def render(self, node):
@@ -137,70 +138,58 @@ class UnoptimizedRenderer:
 		for var in self.bss: print(var)
 
 
-	def procOpPlus(self, node):
+	def procOpPlus(self, node): self.procOpBase(node, "ADD")
+	def procOpMinus(self, node): self.procOpBase(node, "SUB")
+	def procOpShl(self, node): self.procOpBase(node, "SHL")
+	def procOpShr(self, node): self.procOpBase(node, "SHR")
+
+	def procOpBase(self, node, op):
 		children = node.getChildren()
-		inst = "MOV AX," + self.getRepr(children[0])
+		inst = "MOV AX," + self.getVarRef(children[0])
 		self.addInst(inst)
-		inst = "ADD AX," + self.getRepr(children[1])
+		inst = op + " AX," + self.getVarRef(children[1])
 		self.addInst(inst)
 		self.addStor(node)
 
-	def procOpMinus(self, node):
+
+	def procOpMul(self, node): self.procOpSlow(node, "MUL", False)
+	def procOpDiv(self, node): self.procOpSlow(node, "DIV", False)
+	def procOpMod(self, node): self.procOpSlow(node, "DIV", True)
+
+	def procOpSlow(self, node, op, useDx):
 		children = node.getChildren()
-		inst = "MOV AX," + self.getRepr(children[0])
+		inst = "MOV AX," + self.getVarRef(children[0])
 		self.addInst(inst)
-		inst = "SUB AX," + self.getRepr(children[1])
+		inst = "CWD"
 		self.addInst(inst)
+		inst = "MOV CX," + self.getVarRef(children[1])
+		self.addInst(inst)
+		inst = op + " CX"
+		self.addInst(inst)
+		if useDx:
+			inst = "MOV AX,DX"
+			self.addInst(inst)
 		self.addStor(node)
 
-	def procOpShr(self, node):
-		children = node.getChildren()
-		inst = "MOV AX," + self.getRepr(children[0])
-		self.addInst(inst)
-		inst = "SHR AX," + self.getRepr(children[1])
-		self.addInst(inst)
-		self.addStor(node)
 
-	def procOpShl(self, node):
-		children = node.getChildren()
-		inst = "MOV AX," + self.getRepr(children[0])
-		self.addInst(inst)
-		inst = "SHL AX," + self.getRepr(children[1])
-		self.addInst(inst)
-		self.addStor(node)
+	def procOpEq(self, node): self.procOpCond(node, "JE")
+	def procOpNe(self, node): self.procOpCond(node, "JNE")
+	def procOpLt(self, node): self.procOpCond(node, "JL")
+	def procOpLe(self, node): self.procOpCond(node, "JLE")
+	def procOpGt(self, node): self.procOpCond(node, "JG")
+	def procOpGe(self, node): self.procOpCond(node, "JGE")
 
-	def procOpMul(self, node):
+	def procOpCond(self, node, jcc):
 		children = node.getChildren()
-		inst = "MOV AX," + self.getRepr(children[0])
+		inst = "MOV AX,1"
 		self.addInst(inst)
-		inst = "MOV CX," + self.getRepr(children[1])
+		inst = "MOV DX," + self.getVarRef(children[0])
 		self.addInst(inst)
-		inst = "MUL CX"
+		inst = "CMP DX," + self.getVarRef(children[1])
 		self.addInst(inst)
-		self.addStor(node)
-
-	def procOpDiv(self, node):
-		children = node.getChildren()
-		inst = "MOV AX," + self.getRepr(children[0])
+		inst = jcc + " " + self.getLabelRef(node)
 		self.addInst(inst)
-		inst = "CDW"
+		inst = "XOR AX,AX"
 		self.addInst(inst)
-		inst = "MOV CX," + self.getRepr(children[1])
-		self.addInst(inst)
-		inst = "DIV CX"
-		self.addInst(inst)
-		self.addStor(node)
-
-	def procOpMod(self, node):
-		children = node.getChildren()
-		inst = "MOV AX," + self.getRepr(children[0])
-		self.addInst(inst)
-		inst = "CDW"
-		self.addInst(inst)
-		inst = "MOV CX," + self.getRepr(children[1])
-		self.addInst(inst)
-		inst = "DIV CX"
-		self.addInst(inst)
-		inst = "MOV AX,DX"
-		self.addInst(inst)
+		self.addLabel(self.getLabelDef(node))
 		self.addStor(node)

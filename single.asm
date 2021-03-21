@@ -1,15 +1,30 @@
-; t * 2
+; (t/2) * (t == 12)
 
 	ORG 100H
 
-	MOV BX,5
+	MOV SI,12
 
-	MOV AX,BX
+	MOV AX,SI
+	CWD
 	MOV CX,2
+	DIV CX
+	MOV [VAR4],AX
+	MOV AX,1
+	MOV DX,SI
+	CMP DX,12
+	JE LBL8
+	XOR AX,AX
+LBL8:
+	MOV [VAR8],AX
+	MOV AX,[VAR4]
+	CWD
+	MOV CX,[VAR8]
 	MUL CX
-	MOV [var2],AX
+	MOV [VAR2],AX
 
 	INT3
 	RET
 
-var2:	DW 0
+VAR4:	DW 0
+VAR8:	DW 0
+VAR2:	DW 0
