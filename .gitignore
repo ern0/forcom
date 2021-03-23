@@ -2,5 +2,6 @@
 parser.out
 parsetab.py
 .vscode
+*.code-workspace
 ast.png
 *.com
