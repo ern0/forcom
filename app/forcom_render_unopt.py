@@ -48,44 +48,52 @@ class UnoptimizedRenderer:
 
 		#self.addInst("; node #" + str(node.getNumero()))
 		children = node.getChildren()
+		value = node.getValue()
 
-		if node.getValue() == "OP_PLUS": 
+		if value == "OP_PLUS": 
 			self.procOpPlus(node)
-		if node.getValue() == "OP_MINUS":
+		elif value == "OP_MINUS":
 			self.procOpMinus(node)
 
-		if node.getValue() == "OP_SHR":
+		elif value == "OP_SHR":
 			self.procOpShr(node)
-		if node.getValue() == "OP_SHL":
+		elif value == "OP_SHL":
 			self.procOpShl(node)
 
-		if node.getValue() == "OP_MUL":
+		elif value == "OP_MUL":
 			self.procOpMul(node)
-		if node.getValue() == "OP_DIV":
+		elif value == "OP_DIV":
 			self.procOpDiv(node)
-		if node.getValue() == "OP_MOD":
+		elif value == "OP_MOD":
 			self.procOpMod(node)
 
-		if node.getValue() == "OP_OR":
+		elif value == "OP_OR":
 			self.procOpOr(node)
-		if node.getValue() == "OP_XOR":
+		elif value == "OP_XOR":
 			self.procOpXor(node)
-		if node.getValue() == "OP_AND":
+		elif value == "OP_AND":
 			self.procOpAnd(node)
 
-		if node.getValue() == "OP_EQ":
+		elif value == "OP_EQ":
 			self.procOpEq(node)
-		if node.getValue() == "OP_NE":
+		elif value == "OP_NE":
 			self.procOpNe(node)
-		if node.getValue() == "OP_LT":
+		elif value == "OP_LT":
 			self.procOpLt(node)
-		if node.getValue() == "OP_LE":
+		elif value == "OP_LE":
 			self.procOpLe(node)
-		if node.getValue() == "OP_GT":
+		elif value == "OP_GT":
 			self.procOpGt(node)
-		if node.getValue() == "OP_GE":
+		elif value == "OP_GE":
 			self.procOpGe(node)
 
+		elif value == "OP_UNARY_MINUS":
+			self.procOpNeg(node)
+		elif value == "OP_UNARY_NOT":
+			self.procOpNot(node)
+
+		else:
+			quit("internal error: unimplemented " + value)
 
 	def addInst(self, inst):		
 		if inst != "": inst = "\t" + inst
@@ -142,6 +150,9 @@ class UnoptimizedRenderer:
 	def procOpMinus(self, node): self.procOpBase(node, "SUB")
 	def procOpShl(self, node): self.procOpBase(node, "SHL")
 	def procOpShr(self, node): self.procOpBase(node, "SHR")
+	def procOpOr(self, node): self.procOpBase(node, "OR")
+	def procOpXor(self, node): self.procOpBase(node, "XOR")
+	def procOpAnd(self, node): self.procOpBase(node, "AND")
 
 	def procOpBase(self, node, op):
 		children = node.getChildren()
@@ -160,8 +171,9 @@ class UnoptimizedRenderer:
 		children = node.getChildren()
 		inst = "MOV AX," + self.getVarRef(children[0])
 		self.addInst(inst)
-		inst = "CWD"
-		self.addInst(inst)
+		if op == "DIV":
+			inst = "CWD"
+			self.addInst(inst)
 		inst = "MOV CX," + self.getVarRef(children[1])
 		self.addInst(inst)
 		inst = op + " CX"
@@ -192,4 +204,16 @@ class UnoptimizedRenderer:
 		inst = "XOR AX,AX"
 		self.addInst(inst)
 		self.addLabel(self.getLabelDef(node))
+		self.addStor(node)
+
+
+	def procOpNeg(self, node): self.procOpUnary(node, "NEG")
+	def procOpNot(self, node): self.procOpUnary(node, "NOT")
+
+	def procOpUnary(self, node, op):
+		child = node.getChildren()[0]
+		inst = "MOV AX," + self.getVarRef(child)
+		self.addInst(inst)
+		inst = op + " AX"
+		self.addInst(inst)
 		self.addStor(node)
