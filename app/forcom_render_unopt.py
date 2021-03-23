@@ -8,6 +8,7 @@ class UnoptimizedRenderer:
 	def proc(self, node):
 
 		self.code = []
+		self.data = []
 		self.bss = []
 
 		debug = True
@@ -108,7 +109,7 @@ class UnoptimizedRenderer:
 		inst = "MOV "+ self.getVarRef(node) + ",AX"
 		self.addInst(inst)
 
-		stor = self.getVarDef(node) + "\tDW 0"
+		stor = self.getVarDef(node) + "\tDW ?"
 		self.bss.append(stor)
 
 

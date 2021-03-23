@@ -1,4 +1,0 @@
-- eliminate unary plus in tree
-- shr: if arg1 is t -> div32 bx:si
-- div: if arg2 is t -> div32 bx:si
-- doc: abi

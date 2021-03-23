@@ -1,10 +1,16 @@
-; +t
+; 1 / t
 
 	ORG 100H
 
 	MOV SI,12
 
+	MOV AX,1
+	CWD
+	MOV CX,SI
+	DIV CX
+	MOV [VAR2],AX
 
 	INT3
 	RET
 
+VAR2:	DW ?
