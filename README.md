@@ -4,9 +4,9 @@
 
 It's a strange compiler:
 - purpose: bytebeat
-- target platform: 16-bit instructions for modern x86processors
+- target platform: 16-bit instructions for modern x86 processors
 - output: Assembly source (Fasm preferred)
-- ABI: Tomcat's engine
+- ABI: TomCat's engine
 
 ## Current state
 
