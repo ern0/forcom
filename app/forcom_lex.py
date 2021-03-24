@@ -1,5 +1,3 @@
-#!/usr/bin/env python3 -B
-
 import sys
 try: import ply.lex as lex
 except: quit("FATAL: install module ply")
@@ -11,6 +9,7 @@ tokens = (
 	"ATOM_MI_HEX_C", "ATOM_MI_HEX_I", "ATOM_MI_HEX_M",
 	"ATOM_QUOTED",
 	"ATOM_QUOTED_SINGLE", "ATOM_QUOTED_DOUBLE",
+	"FN_MIN", "FN_MAX",
 	"OP_PLUS", "OP_MINUS", "OP_MUL", "OP_DIV", "OP_MOD",
 	"OP_SHL", "OP_SHR",
 	"OP_OR", "OP_AND", "OP_XOR", "OP_NOT",
@@ -28,6 +27,8 @@ t_ignore_COMMENT_BETWEEN = r'\/\*.*\*\/'
 t_ignore_COMMENT_LINE = r'\/\/.*$'
 
 t_ATOM_TEE = r"t"
+t_FN_MIN = r"min"
+t_FN_MAX = r"max"
 t_OP_PLUS = r"\+"
 t_OP_MINUS = r"\-"
 t_OP_MUL = r"\*"
@@ -54,7 +55,8 @@ t_SEP_COLON = r"\:"
 t_SEP_COMMA = r"\,"
 
 
-def t_error(token): pass
+def t_error(token):
+	print("Illegal character '%s'" % token.value[0])
 
 
 def t_ATOM_QUOTED(token):

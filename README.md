@@ -23,9 +23,18 @@ Calculation size is 16-bit.
 
 The result of the formula is AX.
 
-## TODO (unoptimized renderer)
+## TODO 
+
+### Yacc
+
+- BUG: min(t,2) is ok, min(2,t) is yacc error
+
+### Tree Optimizer
 
 - eliminate unary plus in tree
+
+### Unoptimized Renderer
+
 - shr: if arg1 is t -> div32 bx:si
 - div: if arg2 is t -> div32 bx:si
 - implement ternary

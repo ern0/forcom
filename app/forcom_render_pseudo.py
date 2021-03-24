@@ -203,8 +203,9 @@ class PseudoRenderer:
 				
 		v = node.getValue()
 		if v.split("_")[0] == "OP": 
-			self.procOpExpr(node)
-		
+			self.procOpExpr(node)	
+		elif v.split("_")[0] == "FN":
+			self.procFnExpr(node) 
 		else:
 			print("INTERNAL: no renderer for expression type")
 			node.dump()
@@ -272,7 +273,7 @@ class PseudoRenderer:
 
 		elif op == "TERNARY":
 			self.procOpTernary(node)
-			
+					
 		else:
 			print("INTERNAL: no renderer for operand type")
 			node.dump()
@@ -350,3 +351,22 @@ class PseudoRenderer:
 		lvalue = child.getValue()
 
 		self.createData(lvalue, dataValue)
+
+
+	def procFnExpr(self, node):
+		
+		v = node.getValue()
+		fn = v[v.find("_") + 1:]
+
+		lvalue = self.nextVar()
+		node.setValue(lvalue)
+
+		children = node.getChildren()
+		value1 = children[0].getValue()
+		value2 = children[1].getValue()
+
+		if fn == "MIN": 
+			self.createTernary(lvalue, value1 + " < " + value2, value1, value2)
+
+		if fn == "MAX": 
+			self.createTernary(lvalue, value1 + " > " + value2, value1, value2)

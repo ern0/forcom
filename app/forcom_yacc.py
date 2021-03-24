@@ -1,5 +1,3 @@
-#!/usr/bin/env python3 -B
-
 import sys
 try: 
 	import ply.lex as lex
@@ -37,7 +35,19 @@ def p_expr_atom(p):
           | ATOM_TEE
 	'''
 	p[0] = ("ATOM", p[1])
-	
+
+
+def p_fn_min(p):
+	'''expr : FN_MIN BRACE_ROUND_OPEN expr SEP_COMMA expr BRACE_ROUND_CLOSE
+	'''
+	p[0] = ("EXPR", 2, "FN_MIN", (p[3], p[5],))
+
+
+def p_fn_max(p):
+	'''expr : FN_MAX BRACE_ROUND_OPEN expr SEP_COMMA expr BRACE_ROUND_CLOSE
+	'''
+	p[0] = ("EXPR", 2, "FN_MAX", (p[3], p[5],))
+
 
 def p_expr_unop(p):
 	'''expr : OP_PLUS expr
@@ -117,13 +127,14 @@ def p_array(p):
 	'''
 	p[0] = ("ARRAY", (p[1], p[3]))
 	
-	
+
 def proc(formula):
 
 	node = Node()
 
 	try:
 		lexer = forcom_lex.build(formula)
+		print(lexer)
 		parser = yacc.yacc()
 		result = parser.parse(formula)
 		if result is None: 

@@ -1,6 +1,7 @@
 #!/usr/bin/env python3 -B
 
 import sys
+import forcom_lex as lex
 import forcom_yacc as yacc
 import forcom_ast as ast
 import forcom_tree_opt as opt
@@ -14,6 +15,7 @@ def main():
 
 	argError = True	
 	if len(sys.argv) == 3: 
+		if sys.argv[2] == "lex": argError = False
 		if sys.argv[2] == "tree": argError = False
 		if sys.argv[2] == "graph": argError = False
 		if sys.argv[2] == "pseudo": argError = False
@@ -49,7 +51,11 @@ def normalize(formula):
 
 
 def processText(formula, prod):
-	
+
+	if prod == "lex": 
+		lex.proc(formula)
+		quit()
+		
 	node = yacc.proc(formula)
 	opt.proc(node)
 
