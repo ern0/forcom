@@ -60,18 +60,18 @@ def processText(formula, prod):
 	opt.proc(node)
 
 	if prod == "tree":
-		print(formula, end="--\n")
+		print(formula, end="\n--\n")
 		node.dump()
 
 	elif prod == "graph":
-		print(formula, end="--\n")
+		print(formula, end="\n--\n")
 		graph = rg.GraphvizRenderer()
 		graph.proc(node)
 		graph.dump()
 		node.dump()
 
 	elif prod == "pseudo":
-		print(formula, end="--\n")
+		print(formula, end="\n--\n")
 		pseudo = rp.PseudoRenderer()
 		pseudo.proc(node)
 		pseudo.dump()

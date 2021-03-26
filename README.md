@@ -25,10 +25,6 @@ The result of the formula is AX.
 
 ## TODO 
 
-### Yacc
-
-- BUG: min(t,2) is ok, min(2,t) is yacc error
-
 ### Tree Optimizer
 
 - eliminate unary plus in tree

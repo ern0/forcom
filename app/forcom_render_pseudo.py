@@ -194,7 +194,7 @@ class PseudoRenderer:
 			self.procData(node)
 
 		else:
-			print("INTERNAL: no renderer for node type: " + nodeType)
+			print("INTERNAL: no renderer for node type: " + str(nodeType))
 			node.dump()
 			quit()
 

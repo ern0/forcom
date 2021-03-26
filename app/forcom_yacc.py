@@ -37,18 +37,6 @@ def p_expr_atom(p):
 	p[0] = ("ATOM", p[1])
 
 
-def p_fn_min(p):
-	'''expr : FN_MIN BRACE_ROUND_OPEN expr SEP_COMMA expr BRACE_ROUND_CLOSE
-	'''
-	p[0] = ("EXPR", 2, "FN_MIN", (p[3], p[5],))
-
-
-def p_fn_max(p):
-	'''expr : FN_MAX BRACE_ROUND_OPEN expr SEP_COMMA expr BRACE_ROUND_CLOSE
-	'''
-	p[0] = ("EXPR", 2, "FN_MAX", (p[3], p[5],))
-
-
 def p_expr_unop(p):
 	'''expr : OP_PLUS expr
 					| OP_MINUS expr
@@ -76,13 +64,13 @@ def p_expr_binop(p):
 					| expr OP_GT expr  
 					| expr OP_GE expr  
 	'''
-	p[0] = ('EXPR', 2, tt(p,2), (p[1], p[3]))
+	p[0] = ('EXPR', 2, tt(p,2), (p[1], p[3],))
 
 
 def p_expr_ternary(p):
 	'''expr : BRACE_ROUND_OPEN expr SEP_QUESTION expr SEP_COLON expr BRACE_ROUND_CLOSE
 	'''
-	p[0] = ("EXPR", 3, "OP_TERNARY", (p[2], p[4], p[6]))
+	p[0] = ("EXPR", 3, "OP_TERNARY", (p[2], p[4], p[6],))
 
 
 def p_expr_braced(p):
@@ -90,12 +78,6 @@ def p_expr_braced(p):
 	'''
 	p[0] = ("EXPR", 1, "BRACED", (p[2],))
 	
-
-def p_list_naked_is_expr(p):
-	'''expr : list_naked 	
-	'''
-	p[0] = p[1] 
-
 
 def p_list_is_expr(p):
 	'''expr : list 	
@@ -107,7 +89,7 @@ def p_list_num_naked(p):
 	'''list_naked : ATOM_INT SEP_COMMA ATOM_INT
 	              | ATOM_INT SEP_COMMA list_naked
 	'''
-	p[0] = ("LIST", "naked", (p[1], p[3]))
+	p[0] = ("LIST", "naked", (p[1], p[3],))
 
 
 def p_list_num(p):
@@ -125,8 +107,26 @@ def p_list_str(p):
 def p_array(p):
 	'''expr : list BRACE_SQUARE_OPEN expr BRACE_SQUARE_CLOSE
 	'''
-	p[0] = ("ARRAY", (p[1], p[3]))
-	
+	p[0] = ("ARRAY", (p[1], p[3],))
+
+
+def p_fn_min(p):
+	'''fn : FN_MIN BRACE_ROUND_OPEN expr SEP_COMMA expr BRACE_ROUND_CLOSE
+	'''
+	p[0] = ("EXPR", 2, "FN_MIN", (p[3], p[5],))
+
+
+def p_fn_max(p):
+	'''fn : FN_MAX BRACE_ROUND_OPEN expr SEP_COMMA expr BRACE_ROUND_CLOSE
+	'''
+	p[0] = ("EXPR", 2, "FN_MAX", (p[3], p[5],))
+
+
+def p_fn_is_expr(p):
+	'''expr : fn 	
+	'''
+	p[0] = p[1] 
+
 
 def proc(formula):
 
@@ -134,7 +134,6 @@ def proc(formula):
 
 	try:
 		lexer = forcom_lex.build(formula)
-		print(lexer)
 		parser = yacc.yacc()
 		result = parser.parse(formula)
 		if result is None: 

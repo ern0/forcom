@@ -27,8 +27,6 @@ t_ignore_COMMENT_BETWEEN = r'\/\*.*\*\/'
 t_ignore_COMMENT_LINE = r'\/\/.*$'
 
 t_ATOM_TEE = r"t"
-t_FN_MIN = r"min"
-t_FN_MAX = r"max"
 t_OP_PLUS = r"\+"
 t_OP_MINUS = r"\-"
 t_OP_MUL = r"\*"
@@ -53,6 +51,8 @@ t_BRACE_SQUARE_CLOSE = r"\]"
 t_SEP_QUESTION = r"\?"
 t_SEP_COLON = r"\:"
 t_SEP_COMMA = r"\,"
+t_FN_MIN = r"min"
+t_FN_MAX = r"max"
 
 
 def t_error(token):
