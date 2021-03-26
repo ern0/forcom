@@ -54,13 +54,13 @@ class Node:
 		return self.nodeType
 		
 		
-	def setValue(self, value):
+	def setValue(self, value, parsed = None):
 		self.value = str(value)
+		if parsed is not None: self.parsedValue = parsed
 	
 
 	def setParsedValue(self, value):
-		self.parsedValue = str(value)
-		self.value = str(value)
+		self.setValue(value, value)
 	
 	
 	def getValue(self):

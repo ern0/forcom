@@ -25,9 +25,9 @@ The result of the formula is AX.
 
 ## TODO 
 
-### Tree Optimizer
+### Render bug
 
-- eliminate unary plus in tree
+- data rendering is wrong: pseudo, graph
 
 ### Unoptimized Renderer
 

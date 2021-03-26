@@ -3,6 +3,7 @@ from forcom_ast import Node
 
 def proc(node):
 	
+	procRemoveUnaryPlus(node)
 	procChangeInlineConsts(node)
 	
 	for i in range(1,100):
@@ -10,7 +11,18 @@ def proc(node):
 		changeCount += procResolveSingleAtomInBrace(node)
 		if changeCount == 0: break
 	
+
+def procRemoveUnaryPlus(node):
+
+	for subNode in node.getChildren():
+		procRemoveUnaryPlus(subNode)
+
+	if node.getType() != "EXPR": return
+	if node.getValue() != "OP_UNARY_PLUS": return
+
+	node.cloneFrom(node.getChildren()[0])
 	
+
 def procChangeInlineConsts(node):
 	
 	for subNode in node.getChildren():
@@ -36,7 +48,7 @@ def procChangeInlineConsts(node):
 		return
 		
 	if result == int(result):
-		node.setValue(int(result))
+		node.setParsedValue(int(result))
 		return
 
 	if "/" in value: result = round(result, 2)
@@ -74,24 +86,25 @@ def _prcpUnifyLeafChildren(node):
 	v0 = int( node.getChild(0).getValue() )
 	v1 = int( node.getChild(1).getValue() )
 	
-	if op == "PLUS": 
-		node.setValue( v0 + v1 )
+	if op == "PLUS":
+		result = v0 + v1
 	elif op == "MINUS":
-		node.setValue( v0 - v1 )
+		result = v0 - v1
 	elif op == "MUL":
-		node.setValue( v0 * v1 )
+		result = v0 * v1
 	elif op == "DIV":
-		node.setValue( v0 / v1 )
+		result = v0 / v1
 	elif op == "MOD":
-		node.setValue( v0 % v1 )
+		result = v0 % v1
 	elif op == "SHL":
-		node.setValue( v0 << v1 )
+		result = v0 << v1
 	elif op == "SHR":
-		node.setValue( v0 >> v1 )
+		result = v0 >> v1
 	else:
 		return 0
 	
 	node.setType("ATOM")
+	node.setValue(result, "OPTIMIZED")
 	node.removeChildren()
 	return 1
 	
