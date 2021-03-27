@@ -25,9 +25,10 @@ The result of the formula is AX.
 
 ## TODO 
 
-### Render bug
+### RPN
 
-- data rendering is wrong: graph
+- render stuff
+- discuss const sizes
 
 ### Unoptimized Renderer
 

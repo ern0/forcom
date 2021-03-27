@@ -7,6 +7,7 @@ import forcom_ast as ast
 import forcom_tree_opt as opt
 import forcom_render_pseudo as rp
 import forcom_render_graphviz as rg
+import forcom_render_rpn as rr
 import forcom_render_unopt as ru
 import forcom_render_asm as ra
 
@@ -19,6 +20,7 @@ def main():
 		if sys.argv[2] == "tree": argError = False
 		if sys.argv[2] == "graph": argError = False
 		if sys.argv[2] == "pseudo": argError = False
+		if sys.argv[2] == "rpn": argError = False
 		if sys.argv[2] == "unopt": argError = False
 	if argError:
 		quit("specify file (or '-' for stdin) and mode (tree|graph|pseudo|asm)")
@@ -77,6 +79,10 @@ def processText(formula, prod):
 		pseudo.dump()
 		print()
 		node.dump()
+
+	elif prod == "rpn":
+		rpn = rr.RpnRenderer()
+		rpn.proc(node)
 	
 	elif prod == "unopt":
 		unopt = ru.UnoptimizedRenderer()
@@ -84,7 +90,7 @@ def processText(formula, prod):
 		unopt.render(node)
 
 	elif prod == "asm":
-		asm = ru.AsmRenderer()
+		asm = ra.AsmRenderer()
 		asm.proc(node)
 		asm.dump()
 

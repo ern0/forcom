@@ -26,7 +26,6 @@ class Node:
 		self.children = node.children
 		self.error = node.error
 		self.parsedValue = node.parsedValue
-		self.formula = node.formula
 		self.numero = node.numero
 		
 
@@ -94,6 +93,13 @@ class Node:
 	def getChild(self, index):
 		return self.children[index]
 		
+
+	def swapChildren(self):
+		
+		tmp = self.children[0]
+		self.children[0] = self.children[1]
+		self.children[1] = tmp
+
 	
 	def removeChildren(self):
 		self.children = []
