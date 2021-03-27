@@ -10,7 +10,7 @@ class GraphvizRenderer:
 
 		self.root = node
 
-		formula = self.root.getFormula() 
+		formula = self.root.getFormula().replace('"',"&quot;")
 		self.dot = graphviz.Digraph(
 			comment = formula
 			,body = { 
@@ -21,7 +21,6 @@ class GraphvizRenderer:
 
 			}
 		)
-		self.numero = 0
 
 		self.renderNode(None, self.root)
 
@@ -29,10 +28,7 @@ class GraphvizRenderer:
 	def renderNode(self, parentNode, node):
 		
 		nodeType = node.getType()
-		if nodeType == "DATA": return
-
-		self.numero += 1
-		node.setNumero(self.numero)
+		#if nodeType == "DATA": return
 
 		nodeId = self.mkId(node)
 		self.dot.node(nodeId, self.mkTitle(node))
@@ -50,14 +46,18 @@ class GraphvizRenderer:
 	def mkTitle(self, node):
 
 		title = node.getType()
-		if title == "EXPR": 
+		if title == "EXPR" or title == "DATA": 
 			title += " #" + str(node.getNumero())
 		title += ": "
 		title += str(node.getValue())
 
 		return title
 
+
 	def dump(self):
+		
+		print(self.dot.source)
+
 		self.dot.render(
 			view = True
 			,cleanup = True

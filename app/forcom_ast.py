@@ -107,7 +107,7 @@ class Node:
 		print(indent, end="")
 
 		print(self.nodeType, end="")
-		if self.nodeType == "EXPR":
+		if self.nodeType == "EXPR" or self.nodeType == "DATA":
 			print(" #" + str(self.numero), end="")
 		print(": ", end="")
 

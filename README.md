@@ -27,7 +27,7 @@ The result of the formula is AX.
 
 ### Render bug
 
-- data rendering is wrong: pseudo, graph
+- data rendering is wrong: graph
 
 ### Unoptimized Renderer
 
