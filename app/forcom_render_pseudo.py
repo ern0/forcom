@@ -68,18 +68,19 @@ class Ternary:
 
 class Data:
 
-	def __init__(self, lvalue, dataName, dataValue):
+	def __init__(self, lvalue, dataName, dataValue, indexValue):
 
 		self.lvalue = lvalue
 		self.dataName = dataName
 		self.dataValue = dataValue
+		self.indexValue = indexValue
 
 
 	def render(self):
 
 		result = self.lvalue + " = "
 		result += self.dataName
-		result += "[" + self.lvalue + "]\n"
+		result += "[" + self.indexValue + "]\n"
 		
 		return result
 
@@ -142,11 +143,11 @@ class PseudoRenderer:
 		self.instructionItems.append(item)
 		
 
-	def createData(self, lvalue, dataValue):
+	def createData(self, lvalue, dataValue, indexValue):
 
 		dataName = self.nextDataName()
 
-		item = Data(lvalue, dataName, dataValue)
+		item = Data(lvalue, dataName, dataValue, indexValue)
 		self.instructionItems.append(item)
 		self.dataItems.append(item)
 		
@@ -348,9 +349,12 @@ class PseudoRenderer:
 		child = node.getChildren()[0]
 
 		dataValue = node.getValue()
-		lvalue = child.getValue()
+		indexValue = child.getValue()
+		lvalue = self.nextVar()
 
-		self.createData(lvalue, dataValue)
+		node.setValue(lvalue)
+
+		self.createData(lvalue, dataValue, indexValue)
 
 
 	def procFnExpr(self, node):
