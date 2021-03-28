@@ -41,11 +41,17 @@ class RpnRenderer:
 		for child in children: 
 			self.procNode(child)
 	
-		if node.getType() == "ATOM":
-			self.appendPush(node.getValue())
-		
-		if node.getType() == "EXPR":
-			self.appendOp(node.getValue())
+		nodeType = node.getType()
+		nodeValue = node.getValue()
+
+		if nodeType == "ATOM":
+			self.appendPush(nodeValue)
+		elif nodeType == "EXPR":
+			self.appendOp(nodeValue)
+		elif nodeType == "DATA":
+			self.appendData(nodeValue)
+		else:
+			print("internal: unimplemented type: " + nodeType)
 	
 
 	def appendPush(self, value):
@@ -61,8 +67,16 @@ class RpnRenderer:
 		self.code.append(op)
 		self.ops[op] = None
 
+
+	def appendData(self, data):
+
+		dataRef = str(len(self.data) + 1)
+		self.appendOp("LOOKUP_" + dataRef)
+		data = data.replace("[", "").replace("]", "")
+		self.data.append("DATA_" + dataRef + ": " + data)
 	
-	def render(self):
+
+	def dump(self):
 
 		print(self.node.getFormula(), end="\n--\n")
 
@@ -70,6 +84,14 @@ class RpnRenderer:
 		for token in self.code:
 			print("  " + token)
 
-		print("OP-LIST:")
+		print("DATA:")
+		for item in self.data:
+			print("  " + item)
+
+		print("OPS:")
 		for op in self.ops:
 			print("  " + op)
+
+
+	def render(self):
+		self.dump()
